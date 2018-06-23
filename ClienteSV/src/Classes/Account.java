@@ -43,15 +43,15 @@ public static boolean register(String UserID, String username,String password, S
 
             	PreparedStatement ps = con.prepareStatement(sqlInsertUser);
 		//insertar tambien las claves publicas y privadas
-                KeyPair keyPair = genPKI(username, hashPass);
-                PrivateKey privada = keyPair.getPrivate();
-                PublicKey publica = keyPair.getPublic();
+                RSA.genKeyPair(512);
+                String publica = RSA.getPublicKeyString();
+                String privada = RSA.getPrivateKeyString();
                 ps.setString(1,UserID);
 		ps.setString(2,username);
 		ps.setString(3,hashPass);
 		ps.setString(4,dire);
-		ps.setString(5,publica.toString());
-		ps.setString(6, privada.toString());
+		ps.setString(5,publica);
+		ps.setString(6, privada);
                 ps.setInt(7, 2);
 		
             	ps.executeUpdate();

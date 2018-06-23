@@ -30,7 +30,8 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="path" alignment="0" max="32767" attributes="0"/>
-                          <Component id="ci" min="-2" pref="171" max="-2" attributes="0"/>
+                          <Component id="ci" pref="171" max="32767" attributes="0"/>
+                          <Component id="path2" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -56,6 +57,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="path" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="path2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -96,6 +98,11 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="path2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Archivo"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

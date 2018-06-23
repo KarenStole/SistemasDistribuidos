@@ -1,5 +1,6 @@
 
 import Classes.Account;
+import Classes.RSA;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +24,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.swing.JOptionPane;
 import org.apache.commons.io.FileUtils;
 
 /*
@@ -61,6 +63,7 @@ public class ObtenerForm extends javax.swing.JFrame {
         path = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        path2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,6 +88,8 @@ public class ObtenerForm extends javax.swing.JFrame {
             }
         });
 
+        path2.setText("Archivo");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,7 +101,8 @@ public class ObtenerForm extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(path, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ci, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ci, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                            .addComponent(path2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(52, 52, 52)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -114,7 +120,8 @@ public class ObtenerForm extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(path)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(path2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
@@ -132,7 +139,7 @@ public class ObtenerForm extends javax.swing.JFrame {
             OutputStream out = new FileOutputStream(this.ci.getText()+".txt"); 
             out.write(form);
             out.close();
-            this.path.setText(this.ci.getText()+".txt");
+            this.path2.setText(this.ci.getText()+".txt");
             //this.path.setVisible(true);
             //this.jButton2.setVisible(true);
         } catch (IOException ex) {
@@ -143,15 +150,17 @@ public class ObtenerForm extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
                 try{
-            File file = new File(this.path.getText());
+            File file = new File(this.path2.getText());
             byte[] tobyte = new byte[(int) file.length()];
             tobyte = FileUtils.readFileToByteArray(file);
             String Stringkey = Account.obtererPrivKey(Account.cliente.getUserID());
-            RSAPrivateKey key = parseToPrivateKey(Stringkey);
-            byte[] archivoFirmado = CifrarArchivo(tobyte, key);
-            OutputStream out = new FileOutputStream(this.path.getText()); 
+            RSA.setPrivateKeyString(Stringkey);
+            byte[] archivoFirmado = RSA.Encrypt(tobyte.toString()).getBytes();
+            File firmado = new File(this.ci.getText()+".firm");
+            OutputStream out = new FileOutputStream(firmado.getPath()); 
             out.write(archivoFirmado);
             out.close();
+            JOptionPane.showMessageDialog(null, "Documento firmado con éxito");
             
             }
             catch(FileNotFoundException e){
@@ -180,11 +189,12 @@ public class ObtenerForm extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        File file = new File(this.path.getText());
+        File file = new File(this.ci.getText()+".firm");
         byte[] tobyte = new byte[(int) file.length()];
         try {
             tobyte = FileUtils.readFileToByteArray(file);
             ObtenerForm.setForm(tobyte, Account.cliente.getUserID());
+            JOptionPane.showMessageDialog(null, "El archivo firmado fue enviado con éxito!");
         } catch (IOException ex) {
             Logger.getLogger(ObtenerForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -234,6 +244,7 @@ public class ObtenerForm extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel path;
+    private javax.swing.JLabel path2;
     // End of variables declaration//GEN-END:variables
 
     private static byte[] getForm(java.lang.String ci) {
@@ -241,11 +252,6 @@ public class ObtenerForm extends javax.swing.JFrame {
         servers.Firma port = service.getFirmaPort();
         return port.getForm(ci);
     }
-    	static byte[] CifrarArchivo(byte[] clavePrivada, RSAPrivateKey k) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException{
-		Cipher cifrador=Cipher.getInstance("RSA");
-		cifrador.init(Cipher.ENCRYPT_MODE, k);                          
-		return cifrador.doFinal(clavePrivada);                        
-	}
 
     private static Boolean setForm(byte[] form, java.lang.String ci) {
         servers.Firma_Service service = new servers.Firma_Service();
@@ -253,17 +259,6 @@ public class ObtenerForm extends javax.swing.JFrame {
         return port.setForm(form, ci);
     }
     
-    public static RSAPrivateKey parseToPrivateKey(String clavePrivValid) throws NoSuchAlgorithmException, InvalidKeySpecException{
 
-        clavePrivValid = clavePrivValid.replaceAll("\\n", "").replace("sun.security.rsa.RSAPrivateCrtKeyImpl@", "");
-
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-
-        KeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(clavePrivValid));
-        String key = keySpecPKCS8.toString();
-        RSAPrivateKey privKey = (RSAPrivateKey) kf.generatePrivate(keySpecPKCS8);
-
-        return (RSAPrivateKey) privKey;
-    }
 
 }
