@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="file:/C:/Users/Karen/Documents/NetBeansProjects/Servicio/Firma.wsdl" uri="xml-resources/web-service-references/Firma_1/wsdl/Firma.wsdl"/>
+    <system systemId="file:/C:/Users/Karen/Documents/NetBeansProjects/Servicio/Firma_schema1.xsd" uri="xml-resources/web-service-references/Firma_1/wsdl/Firma_schema1.xsd"/>
+    <system systemId="http://localhost:8080/Servicio_1/Firma?wsdl" uri="xml-resources/web-service-references/Firma_2/wsdl/localhost_8080/Servicio_1/Firma.wsdl"/>
+    <system systemId="http://localhost:8080/Servicio_1/Firma?xsd=1" uri="xml-resources/web-service-references/Firma_2/wsdl/localhost_8080/Servicio_1/Firma.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/Servicio/Firma?wsdl" uri="xml-resources/web-service-references/Firma/wsdl/localhost_8080/Servicio/Firma.wsdl"/>
+    <system systemId="http://localhost:8080/Servicio/Firma?xsd=1" uri="xml-resources/web-service-references/Firma/wsdl/localhost_8080/Servicio/Firma.xsd_1.xsd"/>
+</catalog>
