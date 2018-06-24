@@ -18,6 +18,10 @@ public class Inicio extends javax.swing.JFrame {
      * Creates new form Inicio
      */
     ClienteSV cliente;
+
+    /**
+     *
+     */
     public Inicio() {
         initComponents();
         this.cliente= Account.cliente;

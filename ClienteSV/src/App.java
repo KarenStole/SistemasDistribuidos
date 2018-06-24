@@ -1,4 +1,5 @@
 
+import Classes.RSA;
 import clientesv.ClienteSV;
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,8 +7,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import services.Exception_Exception;
+//import servers.Exception_Exception;
+//import servers.Exception_Exception;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -25,12 +32,26 @@ public class App extends javax.swing.JFrame {
      * Creates new form App
      */
     ClienteSV cliente;
+
+    /**
+     *
+     */
     public static App app;
+    ArrayList validadores = new ArrayList();
+
+    /**
+     *
+     * @param cliente
+     */
     public App(ClienteSV cliente) {
         initComponents();
         this.cliente= cliente;
     }
-        public App() {
+
+    /**
+     *
+     */
+    public App() {
         initComponents();
     }
     private File file;
@@ -49,6 +70,7 @@ public class App extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         ci = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +95,13 @@ public class App extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setText("Enviar a validar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,8 +118,10 @@ public class App extends javax.swing.JFrame {
                             .addComponent(num2))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(23, 23, 23))))
         );
         layout.setVerticalGroup(
@@ -106,7 +137,9 @@ public class App extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ci, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addGap(33, 33, 33))
         );
 
         pack();
@@ -158,8 +191,37 @@ public class App extends javax.swing.JFrame {
         // TODO add your handling code here:
         String ci = this.ci.getText();
         byte [] file = App.getForm(ci);
-        File file = new File(this.ci.getText());
+        OutputStream out; 
+        try {
+            out = new FileOutputStream(ci);
+            out.write(file);
+            this.validadores.add(ci);
+            JOptionPane.showMessageDialog(null, "Se obtuvo con éxito el formulario firmado por el usuario con identificación:"+ci+". Tu formulario esta listo para ser enviado a validar por Jefatura.");
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        if(validadores.size()== 1){
+            try {
+                String file = RSA.readFileAsString(this.ci.getText());
+                boolean valido =App.validar(file, this.validadores, this.cliente.getClavePublica(), this.cliente.getUserID(), this.cliente.getDireccion(), this.cliente.getNombre());
+                if (valido){
+                    JOptionPane.showMessageDialog(null, "Usuario validado con exito!");}
+            } catch (IOException ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{JOptionPane.showMessageDialog(null, "Todavía falta una firma para enviar a validar");}
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -202,8 +264,18 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JTextField num2;
     // End of variables declaration//GEN-END:variables
+
+
+/*Llamadas a los webservices para consumir sus servicioes*/
+
+    private static byte[] getForm(java.lang.String ci) {
+        servers.Firma_Service service = new servers.Firma_Service();
+        servers.Firma port = service.getFirmaPort();
+        return port.getForm(ci);
+    }
 
     private static Boolean setForm(byte[] form, java.lang.String ci) {
         servers.Firma_Service service = new servers.Firma_Service();
@@ -211,11 +283,30 @@ public class App extends javax.swing.JFrame {
         return port.setForm(form, ci);
     }
 
-    private static byte[] getForm(java.lang.String ci) {
-        servers.Firma_Service service = new servers.Firma_Service();
-        servers.Firma port = service.getFirmaPort();
-        return port.getForm(ci);
+    private static Boolean validar(java.lang.String file, java.util.List<java.lang.Object> listaCedula, java.lang.String clavePublica, java.lang.String ci, java.lang.String direccion, java.lang.String nombre) throws Exception_Exception {
+        services.Validador_Service service = new services.Validador_Service();
+        services.Validador port = service.getValidadorPort();
+        return port.validar(file, listaCedula, clavePublica, ci, direccion, nombre);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

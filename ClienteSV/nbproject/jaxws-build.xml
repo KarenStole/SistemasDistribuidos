@@ -33,5 +33,22 @@
         <delete dir="${build.generated.dir}/jax-wsCache/Firma"/>
         <delete dir="${build.generated.sources.dir}/jax-ws/servers"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-Firma"/>
+    <target name="wsimport-client-Validador" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/Validador"/>
+        <property name="wsdl-Validador" location="xml-resources/web-service-references/Validador/wsdl/localhost_8080/Servicio_Validador/Validador.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Validador" destdir="${build.generated.dir}/jax-wsCache/Validador" wsdl="${wsdl-Validador}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/Servicio_Validador/Validador?wsdl" xnocompile="true" xendorsed="true">
+            <depends file="${wsdl-Validador}"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/Validador"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/Validador">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-Validador" depends="-init-project">
+        <delete dir="${build.generated.dir}/jax-wsCache/Validador"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/services"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-Firma, wsimport-client-Validador"/>
 </project>

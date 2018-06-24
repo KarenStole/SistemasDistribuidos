@@ -136,10 +136,10 @@ public class ObtenerForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         byte[] form = getForm(this.ci.getText());
         try { 
-            OutputStream out = new FileOutputStream(this.ci.getText()+".txt"); 
+            OutputStream out = new FileOutputStream(this.ci.getText()); 
             out.write(form);
             out.close();
-            this.path2.setText(this.ci.getText()+".txt");
+            this.path2.setText(this.ci.getText());
             //this.path.setVisible(true);
             //this.jButton2.setVisible(true);
         } catch (IOException ex) {
@@ -258,6 +258,8 @@ public class ObtenerForm extends javax.swing.JFrame {
         servers.Firma port = service.getFirmaPort();
         return port.setForm(form, ci);
     }
+
+
     
 
 

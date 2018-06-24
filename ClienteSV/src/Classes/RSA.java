@@ -33,11 +33,25 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+/**
+ *
+ * @author Karen
+ */
 public class RSA {
 
+    /**
+     *
+     */
     public static PrivateKey PrivateKey = null;
+
+    /**
+     *
+     */
     public static PublicKey PublicKey = null;
 
+    /**
+     *
+     */
     public RSA() {
 
     }
@@ -91,6 +105,7 @@ public class RSA {
     /**
      * Genera un par de claves publica-privada (RSA) y las setea
      * @param size 512, 1024, 2048 o 4096 (bits)
+     * @return 
      * @throws NoSuchAlgorithmException
      * @throws NoSuchPaddingException
      * @throws InvalidKeyException

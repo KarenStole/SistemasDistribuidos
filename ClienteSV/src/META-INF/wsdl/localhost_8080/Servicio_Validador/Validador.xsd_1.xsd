@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.3.2-b608 (trunk-7979; 2015-01-21T12:50:19+0000) JAXWS-RI/2.2.11-b150120.1832 JAXWS-API/2.2.12 JAXB-RI/2.2.12-b141219.1637 JAXB-API/2.2.13-b141020.1521 svn-revision#unknown. --><xs:schema xmlns:tns="http://services/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://services/">
+
+<xs:element name="Exception" type="tns:Exception"/>
+
+<xs:element name="obtenerPublica" type="tns:obtenerPublica"/>
+
+<xs:element name="obtenerPublicaResponse" type="tns:obtenerPublicaResponse"/>
+
+<xs:element name="validar" type="tns:validar"/>
+
+<xs:element name="validarResponse" type="tns:validarResponse"/>
+
+<xs:complexType name="obtenerPublica">
+<xs:sequence>
+<xs:element name="ci" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerPublicaResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Exception">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="validar">
+<xs:sequence>
+<xs:element name="file" type="xs:string" minOccurs="0"/>
+<xs:element name="listaCedula" type="xs:anyType" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="clavePublica" type="xs:string" minOccurs="0"/>
+<xs:element name="ci" type="xs:string" minOccurs="0"/>
+<xs:element name="direccion" type="xs:string" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="validarResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

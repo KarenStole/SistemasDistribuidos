@@ -6,4 +6,8 @@
     <system systemId="http://localhost:8080/Servicio_1/Firma?xsd=1" uri="xml-resources/web-service-references/Firma_2/wsdl/localhost_8080/Servicio_1/Firma.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/Servicio/Firma?wsdl" uri="wsdl/localhost_8080/Servicio/Firma.wsdl"/>
     <system systemId="http://localhost:8080/Servicio/Firma?xsd=1" uri="wsdl/localhost_8080/Servicio/Firma.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/Servicio/Validador?wsdl" uri="wsdl/localhost_8080/Servicio/Validador.wsdl"/>
+    <system systemId="http://localhost:8080/Servicio/Validador?xsd=1" uri="wsdl/localhost_8080/Servicio/Validador.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/Servicio_Validador/Validador?wsdl" uri="wsdl/localhost_8080/Servicio_Validador/Validador.wsdl"/>
+    <system systemId="http://localhost:8080/Servicio_Validador/Validador?xsd=1" uri="wsdl/localhost_8080/Servicio_Validador/Validador.xsd_1.xsd"/>
 </catalog>

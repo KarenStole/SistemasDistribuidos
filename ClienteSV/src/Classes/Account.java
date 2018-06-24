@@ -32,8 +32,22 @@ import org.postgresql.util.PSQLException;
  */
 public class Account {
     //Registro de usuario
+
+    /**
+     *
+     */
     public static ClienteSV cliente;
 
+/**
+ * Clase encargada de registrar al usuario al sistema, ingresandolo en la base de datos, asi como
+ * tambien generando el par de claves unicas para cada usuario.
+ * @param UserID
+ * @param username
+ * @param password
+ * @param dire
+ * @return boolean
+ * @throws Exception 
+ */    
 public static boolean register(String UserID, String username,String password, String dire) throws Exception
 	{
             try{
@@ -56,7 +70,7 @@ public static boolean register(String UserID, String username,String password, S
 		
             	ps.executeUpdate();
 
-		Account.cliente = new ClienteSV(UserID,username,dire, 2);
+		Account.cliente = new ClienteSV(UserID,username,dire,publica, 2);
 		
 
 		con.close();
@@ -69,7 +83,11 @@ public static boolean register(String UserID, String username,String password, S
             }
 		
 	}
-
+/**
+ * Clase encargada de realizar la conexion a la base de datos.
+ * @return Connection
+ * @throws Exception 
+ */
 //Coneccion a la base de datos
 private static Connection getConnection() throws Exception
 	{
@@ -79,6 +97,14 @@ private static Connection getConnection() throws Exception
 		return connection;
 	}
 
+/**
+ * Metodo encargado de generar el par de claves publicas y privadas para el algoritmo
+ * de encriptacion asimentrica RSA
+ * @param uid
+ * @param password
+ * @return KeyPair
+ * @throws Exception 
+ */
 //Generar las claves
 	static public KeyPair genPKI(String uid, String password) throws Exception
 	{
@@ -93,6 +119,14 @@ private static Connection getConnection() throws Exception
 	}
 
 //Login de usuario
+/**
+ * Clase encargafa de autorizar al usuario al ingreso al sistema mediante la comprobacion
+ * le las credenciales brindadas por este.
+ * @param username
+ * @param password
+ * @return boolean
+ * @throws Exception 
+ */
 public static boolean login(String username, String password) throws Exception
 	{	
 
@@ -111,14 +145,22 @@ public static boolean login(String username, String password) throws Exception
 			String uid=rs.getString(1);
 			String userName= rs.getString(2);
 			String dirección = rs.getString(4);
+                        String clave = rs.getString(5);
 			int rol = rs.getInt(7);
-			Account.cliente = new ClienteSV(uid,userName,dirección, rol);
+			Account.cliente = new ClienteSV(uid,userName,dirección,clave, rol);
 			 con.close();
 			 return true;
         	}
         	else return false;
 
 	}
+/**
+ * Metodo que perminte hashear la password ingresada para ser guardada como hashe en la base de datos, con el
+ * fin de tener mas seguridad. Se utiliza el algoritmo de one-way-hash SHA-1
+ * @param pass
+ * @return String
+ * @throws Exception 
+ */
     private static String hashPass( String pass) throws Exception
             {
                 MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -132,6 +174,13 @@ public static boolean login(String username, String password) throws Exception
 
     }
 
+    /**
+     * Clase encargada de obtener la clave privada de un usuario en especifico,
+     * siendo este ya registrado en el sistema.
+     * @param userID
+     * @return String
+     * @throws Exception 
+     */
     public static String obtererPrivKey(String userID) throws Exception{
             String sqlLogin = "SELECT ClavePrivada from public.\"Users\" where userid=?";
             Connection con = Account.getConnection();

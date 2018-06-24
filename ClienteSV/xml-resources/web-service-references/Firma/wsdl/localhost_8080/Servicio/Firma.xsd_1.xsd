@@ -8,6 +8,18 @@
 
 <xs:element name="setFormResponse" type="tns:setFormResponse"/>
 
+<xs:complexType name="getForm">
+<xs:sequence>
+<xs:element name="ci" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getFormResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:base64Binary" nillable="true" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="setForm">
 <xs:sequence>
 <xs:element name="form" type="xs:base64Binary" nillable="true" minOccurs="0"/>
@@ -18,18 +30,6 @@
 <xs:complexType name="setFormResponse">
 <xs:sequence>
 <xs:element name="return" type="xs:boolean" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="getForm">
-<xs:sequence>
-<xs:element name="ci" type="xs:string" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="getFormResponse">
-<xs:sequence>
-<xs:element name="return" type="xs:base64Binary" nillable="true" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 </xs:schema>
